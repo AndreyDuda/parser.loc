@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\Parser\NewsParserService;
-use Illuminate\Http\Request;
-use Symfony\Component\DomCrawler\Crawler;
-use App\Service\Parser\ProductParserService;
-
 class HomeController extends Controller
 {
     private $link;
@@ -17,13 +12,13 @@ class HomeController extends Controller
 
     private $html;
 
-    public function __construct(NewsParserService $parser)
+    public function __construct()
     {
         $this->link  = 'https://hi-news.ru/';
         $this->page  = 'page/';
         $this->count = 2;
 
-        $this->parser = $parser;
+
 
     }
 
@@ -31,11 +26,14 @@ class HomeController extends Controller
     {
         $array = [];
 
-        for ($i = 1; $i <= $this->count; $i++) {
+        $crawler = new \App\Service\Crawler();
+        $crawler->execute();
+
+       /* for ($i = 1; $i <= $this->count; $i++) {
             $array[] = $this->parser->parse($this->link.$this->page.$i);
         }
 
-        dd($array);
+        dd($array);*/
         return view('welcome');
     }
 }
