@@ -28,6 +28,6 @@ class Crawler implements ICrawler
             $link = $data[$instance::NAME];
         }
 
-        dd($data);
+        return $data;
     }
 }

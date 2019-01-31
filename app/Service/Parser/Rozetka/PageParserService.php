@@ -33,7 +33,7 @@ class PageParserService implements IParser
         $crawler->addHtmlContent($html, 'UTF-8');
         $category = preg_replace('/[^ a-zа-яё\d]/ui', '', $crawler->filter('h1')->text());
         $content['category'] = $category;
-        $content['content']  = $crawler->filter('div.g-i-tile-i-title > a')->each(function (Crawler $node, $i) {
+        $content['content']  = $crawler->filter('div.light div.g-i-tile-i-title > a')->each(function (Crawler $node, $i) {
                                     return $node->attr('href');
         });
 

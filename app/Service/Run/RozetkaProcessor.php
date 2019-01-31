@@ -23,9 +23,12 @@ class RozetkaProcessor implements ProcessorInterface
 
     public function run()
     {
-        foreach ($this->links as $link) {
+        $content =[];
+        foreach ($this->links as $k =>$link) {
 
-            $this->crawler->execute($link);
+            $content[] = $this->crawler->execute($link);
         }
+
+        dd($content);
     }
 }
