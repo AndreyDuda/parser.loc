@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\Run\RozetkaProcess;
+
 class HomeController extends Controller
 {
     private $link;
@@ -25,9 +27,12 @@ class HomeController extends Controller
     public function index()
     {
         $array = [];
-
+/*
         $crawler = new \App\Service\Crawler();
-        $crawler->execute();
+        $crawler->execute();*/
+
+        $process = new RozetkaProcess();
+        $process->run();
 
        /* for ($i = 1; $i <= $this->count; $i++) {
             $array[] = $this->parser->parse($this->link.$this->page.$i);

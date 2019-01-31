@@ -9,25 +9,40 @@
 namespace App\Service\Parser\Rozetka;
 
 use App\Service\IParser;
+use Symfony\Component\DomCrawler\Crawler;
 
 class PageParserService implements IParser
 {
-    const NAME = 'PageParserService';
+    const NAME     = 'PageParserService';
 
-    const category = 'https://hi-news.ru/';
+    private $links;
+    private $count_page;
 
-    public function parse()
+    public function __construct()
     {
-        $html = file_get_contents(self::category);
-        $crawler = new $crawler(null, self::category);
-        $crawler->addHtmlContent($html, 'UTF-8');
+        $this->links      = config('parser.resource.rozetka.categories');
+        $this->count_page = config('parser.resource.rozetka.settings.count_page');
+    }
 
-        $links = $crawler->filter('#main > #content')->each(function (Crawler $node, $i) {
-            return $node->filter('h2 > a')->each(function (Crawler $node, $i) {
-                return $node->attr('href');
+    public function parse(): array
+    {
+
+        $content = [];
+        foreach ($this->links as $k => $link) {
+
+            $html    = file_get_contents($link);
+            $crawler = new Crawler(null, $link);
+            $crawler->addHtmlContent($html, 'UTF-8');
+
+            $category = preg_replace('/[^ a-zа-яё\d]/ui', '', $crawler->filter('h1')->text());
+            $content[$k]['category'] = $category;
+            $content[$k]['content']  = $crawler->filter('#catalog_goods_block')->each(function (Crawler $node, $i) {
+                return $node->filter('div.g-i-tile-i-title > a')->each(function (Crawler $node, $i) {
+                    return $node->attr('href');
+                });
             });
-        });
+        }
 
-        return $links;
+        return $content;
     }
 }

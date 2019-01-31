@@ -1,0 +1,32 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: duda
+ * Date: 30.01.19
+ * Time: 23:26
+ */
+
+namespace App\Service;
+
+use App\Service\Parser\Rozetka\PageParserService;
+use App\Service\Parser\Rozetka\ProductParserService;
+
+class Crawler implements ICrawler
+{
+    const PARSE = [
+        PageParserService::NAME    => PageParserService::class,
+        ProductParserService::NAME => ProductParserService::class
+    ];
+
+    public function execute()
+    {
+        $data = [];
+        foreach (self::PARSE as $class) {
+            $instance = new $class();
+            /** @var IParser $instance */
+            $data[] = $instance->parse();
+        }
+
+        dd($data);
+    }
+}
