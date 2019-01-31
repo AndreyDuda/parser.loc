@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\Run\RozetkaProcess;
+use App\Service\Run\RozetkaProcessor;
 
 class HomeController extends Controller
 {
@@ -31,7 +31,7 @@ class HomeController extends Controller
         $crawler = new \App\Service\Crawler();
         $crawler->execute();*/
 
-        $process = new RozetkaProcess();
+        $process = new RozetkaProcessor();
         $process->run();
 
        /* for ($i = 1; $i <= $this->count; $i++) {

@@ -12,5 +12,5 @@ use Symfony\Component\DomCrawler\Crawler;
 
 interface ICrawler
 {
-    public function execute();
+    public function execute($link);
 }

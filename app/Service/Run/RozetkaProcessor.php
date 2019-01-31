@@ -10,17 +10,22 @@ namespace App\Service\Run;
 
 use App\Service\Crawler;
 
-class RozetkaProcess
+class RozetkaProcessor implements ProcessorInterface
 {
     private $crawler;
+    private $links;
 
     public function __construct()
     {
         $this->crawler = new Crawler();
+        $this->links   = config('parser.resource.rozetka.categories');
     }
 
     public function run()
     {
-        $this->crawler->execute();
+        foreach ($this->links as $link) {
+
+            $this->crawler->execute($link);
+        }
     }
 }

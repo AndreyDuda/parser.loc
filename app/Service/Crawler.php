@@ -13,18 +13,19 @@ use App\Service\Parser\Rozetka\ProductParserService;
 
 class Crawler implements ICrawler
 {
-    const PARSE = [
+    const PARSER = [
         PageParserService::NAME    => PageParserService::class,
         ProductParserService::NAME => ProductParserService::class
     ];
 
-    public function execute()
+    public function execute($link)
     {
         $data = [];
-        foreach (self::PARSE as $class) {
-            $instance = new $class();
+        foreach (self::PARSER as $class) {
+            $instance = new $class($link);
             /** @var IParser $instance */
-            $data[] = $instance->parse();
+            $data[$instance::NAME] = $instance->parse();
+            $link = $data[$instance::NAME];
         }
 
         dd($data);

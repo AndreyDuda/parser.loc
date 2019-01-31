@@ -15,33 +15,27 @@ class PageParserService implements IParser
 {
     const NAME     = 'PageParserService';
 
-    private $links;
+    private $link;
     private $count_page;
 
-    public function __construct()
+    public function __construct($link)
     {
-        $this->links      = config('parser.resource.rozetka.categories');
+        $this->link      = $link;
         $this->count_page = config('parser.resource.rozetka.settings.count_page');
     }
 
     public function parse(): array
     {
-
         $content = [];
-        foreach ($this->links as $k => $link) {
 
-            $html    = file_get_contents($link);
-            $crawler = new Crawler(null, $link);
-            $crawler->addHtmlContent($html, 'UTF-8');
-
-            $category = preg_replace('/[^ a-zа-яё\d]/ui', '', $crawler->filter('h1')->text());
-            $content[$k]['category'] = $category;
-            $content[$k]['content']  = $crawler->filter('#catalog_goods_block')->each(function (Crawler $node, $i) {
-                return $node->filter('div.g-i-tile-i-title > a')->each(function (Crawler $node, $i) {
-                    return $node->attr('href');
-                });
-            });
-        }
+        $html    = file_get_contents($this->link);
+        $crawler = new Crawler(null, $this->link);
+        $crawler->addHtmlContent($html, 'UTF-8');
+        $category = preg_replace('/[^ a-zа-яё\d]/ui', '', $crawler->filter('h1')->text());
+        $content['category'] = $category;
+        $content['content']  = $crawler->filter('div.g-i-tile-i-title > a')->each(function (Crawler $node, $i) {
+                                    return $node->attr('href');
+        });
 
         return $content;
     }
