@@ -35,8 +35,6 @@ class RozetkaProcessor implements ProcessorInterface
 
         $this->record_manager->save($content);
 
-        dd('S U C C E S S');
-
-
+        return true;
     }
 }
