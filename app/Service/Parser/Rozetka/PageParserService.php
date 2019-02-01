@@ -8,6 +8,7 @@
 
 namespace App\Service\Parser\Rozetka;
 
+use App\Service\Error\ErrorCrawler\ErrorNodeEmpty;
 use App\Service\IParser;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -27,14 +28,16 @@ class PageParserService implements IParser
     public function parse(): array
     {
         $content = [];
-
+        $check   = new ErrorNodeEmpty();
+//preg_replace('/[^ a-zа-яё\d]/ui', '',
         $html    = file_get_contents($this->link);
         $crawler = new Crawler(null, $this->link);
         $crawler->addHtmlContent($html, 'UTF-8');
-        $category = preg_replace('/[^ a-zа-яё\d]/ui', '', $crawler->filter('h1')->text());
+        $category = $check($crawler->filter('h1'))->text();
         $content['category'] = $category;
         $content['content']  = $crawler->filter('div.light div.g-i-tile-i-title > a')->each(function (Crawler $node, $i) {
-                                    return $node->attr('href');
+            $check = new ErrorNodeEmpty();
+            return $check($node)->attr('href');
         });
 
         return $content;
