@@ -29,8 +29,8 @@ class ProductParserService implements IParser
             $crawler = new Crawler(null, $link);
             $crawler->addHtmlContent($html, 'UTF-8');
 
-
             $content[$k]['title'] = $check($crawler->filter('.detail-title'))->text();
+            $content[$k]['code']  = $check($crawler->filter('.detail-code-i'))->text();
             $content[$k]['text']  = $check($crawler->filter('.short-description'))->text();
             $content[$k]['price'] = $check($crawler->filter('.detail-price-uah > meta')->first())->attr('content');
             $content[$k]['image'] = $crawler->filter('.detail-img-thumbs-l-i')->each(function (Crawler $node, $i) {

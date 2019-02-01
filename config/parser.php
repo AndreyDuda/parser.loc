@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'resource' => [
         'rozetka' => [
             'link' => 'rozetka.com',
@@ -12,7 +11,7 @@ return [
             'settings' => [
                 'count_content'  => 10,
                 'count_page'     => 2,
-                'update_content' => 0,
+                'update_content' => 10,
             ],
         ],
     ],

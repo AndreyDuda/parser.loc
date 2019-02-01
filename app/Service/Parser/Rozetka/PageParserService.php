@@ -29,7 +29,7 @@ class PageParserService implements IParser
     {
         $content = [];
         $check   = new ErrorNodeEmpty();
-//preg_replace('/[^ a-zа-яё\d]/ui', '',
+
         $html    = file_get_contents($this->link);
         $crawler = new Crawler(null, $this->link);
         $crawler->addHtmlContent($html, 'UTF-8');

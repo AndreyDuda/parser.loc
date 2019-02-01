@@ -18,12 +18,11 @@ class CreateRozetkaProductTable extends Migration
         Schema::create(RozetkaProduct::TABLE, function (Blueprint $table) {
             $table->increments(RozetkaProduct::PROP_ID)
                 ->references(RozetkaImage::PROP_PRODUCT_ID)
-                ->on(RozetkaImage::TABLE)
-                ->delete('CASCADE');
-            $table->string(RozetkaProduct::PROP_CODE,255)->index();
-            $table->string(RozetkaProduct::PROP_TITLE, 255);
-            $table->text(RozetkaProduct::PROP_TEXT);
-            $table->string(RozetkaProduct::PROP_PRICE, 10);
+                ->on(RozetkaImage::TABLE);
+            $table->string(RozetkaProduct::PROP_CODE,255)->nullable();
+            $table->string(RozetkaProduct::PROP_TITLE, 255)->nullable();
+            $table->text(RozetkaProduct::PROP_TEXT)->nullable();
+            $table->string(RozetkaProduct::PROP_PRICE, 10)->nullable();
             $table->timestamps();
 
 

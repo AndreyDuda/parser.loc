@@ -13,23 +13,28 @@ class RozetkaProduct extends Model
     const PROP_TITLE    = 'title';
     const PROP_TEXT     = 'text';
     const PROP_PRICE    = 'price';
-    const PROP_IMAGE_ID = 'image_id';
+
 
     protected $fillable = [
         self::PROP_TITLE,
+        self::PROP_CODE,
         self::PROP_TEXT,
         self::PROP_PRICE,
-        self::PROP_IMAGE_ID
     ];
 
     protected $table = self::TABLE;
 
     public function image()
     {
-        return $this->belongsToMany(static::class, self::PROP_ID, RozetkaImage::PROP_PRODUCT_ID);
+        return $this->belongsToMany(static::class, RozetkaImage::TABLE, RozetkaImage::PROP_PRODUCT_ID);
     }
 
-    public function add(string $code, string $title, string $text, float $price)
+    public static function getOne($code)
+    {
+        return static::where(self::PROP_CODE, $code)->first();
+    }
+
+    public static function add(string $code, string $title, string $text, float $price)
     {
         return static::create([
             self::PROP_CODE  => $code,
