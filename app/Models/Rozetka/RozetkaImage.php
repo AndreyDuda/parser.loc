@@ -3,6 +3,7 @@
 namespace App\Models\Rozetka;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Rozetka\RozetkaProduct;
 
 class RozetkaImage extends Model
 {
@@ -19,21 +20,8 @@ class RozetkaImage extends Model
 
     protected $table = self::TABLE;
 
-    public function product()
+    public static function getAll($product_id)
     {
-        return $this->hasOne(self::class, self::PROP_PRODUCT_ID, RozetkaProduct::PROP_ID);
-    }
-
-    public function add(int $product_id, string $url)
-    {
-        return static::create([
-            self::PROP_PRODUCT_ID => $product_id,
-            self::PROP_URL        => $url
-        ]);
-    }
-
-    public function edit(int $product_id, string $url)
-    {
-        $image = $this->where(self::PROP_PRODUCT_ID, $product_id)->all();
+        return static::where(self::PROP_PRODUCT_ID, $product_id);
     }
 }

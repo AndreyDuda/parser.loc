@@ -12,10 +12,12 @@ class ProductParserService implements IParser
     const NAME = 'ProductParserService';
 
     private $links;
+    private $count_content;
 
     public function __construct($link)
     {
         $this->links = $link;
+        $this->count_content = (integer)config('parser.resource.rozetka.settings.count_content');
     }
 
     public function parse()
@@ -23,20 +25,28 @@ class ProductParserService implements IParser
         $content = [];
         $check   = new ErrorNodeEmpty();
 
-        foreach ($this->links['content'] as $k=>$link) {
-            $html    = file_get_contents($link);
+        foreach ($this->links['content'] as $i=>$links) {
 
-            $crawler = new Crawler(null, $link);
-            $crawler->addHtmlContent($html, 'UTF-8');
+            foreach ($links as $k => $link) {
 
-            $content[$k]['title'] = $check($crawler->filter('.detail-title'))->text();
-            $content[$k]['code']  = $check($crawler->filter('.detail-code-i'))->text();
-            $content[$k]['text']  = $check($crawler->filter('.short-description'))->text();
-            $content[$k]['price'] = $check($crawler->filter('.detail-price-uah > meta')->first())->attr('content');
-            $content[$k]['image'] = $crawler->filter('.detail-img-thumbs-l-i')->each(function (Crawler $node, $i) {
-                $check = new ErrorNodeEmpty();
-                return $check($node->children('a'))->attr('href');
-            });
+                if ($k >= $this->count_content && $this->count_content != 0) {
+                    break;
+                }
+
+                $html = file_get_contents($link);
+
+                $crawler = new Crawler(null, $link);
+                $crawler->addHtmlContent($html, 'UTF-8');
+
+                $content[$i][$k]['title'] = $check($crawler->filter('.detail-title'))->text();
+                $content[$i][$k]['code']  = $check($crawler->filter('.detail-code-i'))->text();
+                $content[$i][$k]['text']  = $check($crawler->filter('.short-description'))->text();
+                $content[$i][$k]['price'] = $check($crawler->filter('.detail-price-uah > meta')->first())->attr('content');
+                $content[$i][$k]['image'] = $crawler->filter('.detail-img-thumbs-l-i')->each(function (Crawler $node, $i) {
+                    $check = new ErrorNodeEmpty();
+                    return $check($node->children('a'))->attr('href');
+                });
+            }
         }
 
         return $content;

@@ -23,7 +23,7 @@ class CreateRozetkaImageTable extends Migration
 
             $table->foreign(RozetkaImage::PROP_PRODUCT_ID)
                 ->references(RozetkaProduct::PROP_ID)
-                ->on(RozetkaProduct::TABLE);
+                ->on(RozetkaProduct::TABLE)->onDelete('CASCADE');
         });
     }
 

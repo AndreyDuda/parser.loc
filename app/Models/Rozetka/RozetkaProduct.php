@@ -3,6 +3,7 @@
 namespace App\Models\Rozetka;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Rozetka\RozetkaImage;
 
 class RozetkaProduct extends Model
 {
@@ -26,32 +27,11 @@ class RozetkaProduct extends Model
 
     public function image()
     {
-        return $this->belongsToMany(static::class, RozetkaImage::TABLE, RozetkaImage::PROP_PRODUCT_ID);
+        return $this->hasMany(RozetkaImage::class);
     }
 
     public static function getOne($code)
     {
         return static::where(self::PROP_CODE, $code)->first();
-    }
-
-    public static function add(string $code, string $title, string $text, float $price)
-    {
-        return static::create([
-            self::PROP_CODE  => $code,
-            self::PROP_TITLE => $title,
-            self::PROP_TEXT  => $text,
-            self::PROP_PRICE => $price
-        ]);
-    }
-
-    public function edit(string $code, string $title, string $text, float $price)
-    {
-        $product = $this->where(self::PROP_CODE, $code)->first();
-        return $product->update([
-                self::PROP_CODE  => $code,
-                self::PROP_TITLE => $title,
-                self::PROP_TEXT  => $text,
-                self::PROP_PRICE => $price
-        ]);
     }
 }

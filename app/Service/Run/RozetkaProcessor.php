@@ -9,7 +9,6 @@
 namespace App\Service\Run;
 
 use App\Service\Crawler;
-use App\Service\Handler\ClearData;
 use App\Service\RecordManager\Rozetka\RecordManagerRozetka;
 
 class RozetkaProcessor implements ProcessorInterface
@@ -28,12 +27,11 @@ class RozetkaProcessor implements ProcessorInterface
     public function run()
     {
         $content = [];
-        $clear_data = new ClearData();
-        foreach ($this->links as $k =>$link) {
 
-            $content[] = $this->crawler->execute($link);
+        foreach ($this->links as $k => $link) {
+
+            $content[$k] = $this->crawler->execute($link);
         }
-
 
         $this->record_manager->save($content);
 

@@ -10,7 +10,6 @@ namespace App\Service\RecordManager\Rozetka;
 
 use App\Models\Rozetka\RozetkaImage;
 use App\Models\Rozetka\RozetkaProduct;
-use App\Service\Handler\ClearData;
 use App\Service\IRecordManager;
 use App\Service\Parser\Rozetka\ProductParserService;
 
@@ -26,49 +25,54 @@ class RecordManagerRozetka implements IRecordManager
 
     public function save($data)
     {
-        $clear_text = new ClearData();
 
-        foreach ($data as $item) {
-            foreach ($item[ProductParserService::NAME] as $k=>$content) {
+        foreach ($data as $items) {
 
-                if ($product = RozetkaProduct::getOne($content['code'])) {
-                    if ($this->count_update < 1) {
-                        continue;
-                    }
-                    /** @var RozetkaProduct $product */
-                    $product->update([
-                        RozetkaProduct::PROP_CODE  => $content['code'],
-                        RozetkaProduct::PROP_TITLE => $content['title'],
-                        RozetkaProduct::PROP_PRICE => $content['price'],
-                        RozetkaProduct::PROP_TEXT  => $content['text']
-                    ]);
+            foreach ($items[ProductParserService::NAME] as $item) {
+                foreach ($item as $k => $content) {
 
-                    $product->image()->delete();
-                    foreach ($content['image'] as $image) {
-                        RozetkaImage::create([
-                            RozetkaImage::PROP_PRODUCT_ID => $product->id,
-                            RozetkaImage::PROP_URL        => $image
+                    if ($product = RozetkaProduct::getOne($content['code'])) {
+
+                        if ($this->count_update < $k && $this->count_update != 0) {
+                            continue;
+                        }
+                        /** @var RozetkaProduct $product */
+                        $product->update([
+                            RozetkaProduct::PROP_CODE  => $content['code'],
+                            RozetkaProduct::PROP_TITLE => $content['title'],
+                            RozetkaProduct::PROP_PRICE => $content['price'],
+                            RozetkaProduct::PROP_TEXT  => $content['text']
                         ]);
-                    }
-                    --$this->count_update;
-                } else {
 
-                    $product = RozetkaProduct::create([
-                        RozetkaProduct::PROP_CODE  => $content['code'],
-                        RozetkaProduct::PROP_TITLE => $content['title'],
-                        RozetkaProduct::PROP_TEXT  => $content['text'],
-                        RozetkaProduct::PROP_PRICE => $content['price']
-                    ]);
+                        if ($product->image()) {
+                            $product->image()->delete();
+                        }
 
-                    foreach ($content['image'] as $image) {
-                        RozetkaImage::create([
-                            RozetkaImage::PROP_PRODUCT_ID => $product->id,
-                            RozetkaImage::PROP_URL        => $image
+                        foreach ($content['image'] as $image) {
+                            RozetkaImage::create([
+                                RozetkaImage::PROP_PRODUCT_ID => $product->id,
+                                RozetkaImage::PROP_URL        => $image
+                            ]);
+                        }
+
+                    } else {
+
+                        $product = RozetkaProduct::create([
+                            RozetkaProduct::PROP_CODE => $content['code'],
+                            RozetkaProduct::PROP_TITLE => $content['title'],
+                            RozetkaProduct::PROP_TEXT => $content['text'],
+                            RozetkaProduct::PROP_PRICE => $content['price']
                         ]);
+
+                        foreach ($content['image'] as $image) {
+                            RozetkaImage::create([
+                                RozetkaImage::PROP_PRODUCT_ID => $product->id,
+                                RozetkaImage::PROP_URL        => $image
+                            ]);
+                        }
                     }
                 }
             }
         }
-
     }
 }
