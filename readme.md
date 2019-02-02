@@ -8,7 +8,7 @@
 ## 2. Клонировать проект 
 1. Можно клонировать проект при помощи git 
 <pre>
-<code>git clone https://github.com/AndreyDuda/commentapi.loc.git</code>
+<code>git clone https://github.com/AndreyDuda/parser.loc.git</code>
 </pre>
 2. Запустить через composer установку всех необходимых библиотек
 <pre>
